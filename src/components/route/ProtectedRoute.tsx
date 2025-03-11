@@ -21,11 +21,13 @@ const ProtectedRoute = ({
   }
 
   if (!onlyUnAuth && !isAuthChecked) {
-    return <Navigate replace to='/login' state={{ from: location }} />;
+    // Перенаправление на /login, если не авторизован
+    return <Navigate to='/login' state={{ from: location }} />;
   }
   if (onlyUnAuth && isAuthChecked) {
     const prevPage = location.state?.from || { pathname: '/' };
-    return <Navigate replace to={prevPage} />;
+    // Перенаправление на предыдущую страницу, если уже авторизован
+    return <Navigate  to={prevPage} />;
   }
   return <>{component}</>;
 };

@@ -78,7 +78,7 @@ export const App = () => {
           path='/profile/orders'
           element={<OnlyAuth component={<ProfileOrders />} />}
         />
-        <Route path='/profile/orders/:number' element={<OrderInfo />} />
+         <Route path='/profile/orders/:number' element={<OnlyAuth component={<OrderInfo />} />} /> {/* Добавила защиту */}
 
         <Route
           path='/ingredients/:id'

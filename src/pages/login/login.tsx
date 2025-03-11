@@ -33,7 +33,7 @@ export const Login: FC = () => {
         resultAction.payload as unknown as TAuthResponse;
       localStorage.setItem('refreshToken', refreshToken);
       localStorage.setItem('accessToken', accessToken);
-      navigate('/');
+
     } else {
       alert('Введите корректные данные');
     }
