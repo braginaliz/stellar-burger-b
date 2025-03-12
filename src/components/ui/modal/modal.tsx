@@ -22,5 +22,5 @@ export const ModalUI: FC<TModalUIProps> = memo(
       </div>
       <ModalOverlayUI onClick={onClose} />
     </>
-  )
+  ) 
 );

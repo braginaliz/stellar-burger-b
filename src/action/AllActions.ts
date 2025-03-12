@@ -5,7 +5,7 @@ import {
   getIngredientsApi,
   orderBurgerApi,
   getOrdersApi
-} from '@api';
+} from '../utils/burger-api';
 import {
   registerUserApi,
   loginUserApi,

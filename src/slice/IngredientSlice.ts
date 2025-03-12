@@ -30,7 +30,7 @@ export const ingredientsSlice = createSlice({
       })
       .addCase(fetchIngredients.rejected, (state, action) => {
         state.isLoad = false;
-        state.error = action.error.message || 'Failed to fetch ingredients';
+        state.error = action.error?.message || 'Failed to fetch ingredients';
       });
   },
 
