@@ -1,34 +1,73 @@
-describe('Конструктор бургера', () => {
-    beforeEach(() => {
-        cy.visit('http://localhost:4000/');
-        cy.intercept('GET', '/api/ingredients', { fixture: 'ingredients.json' }).as('getIngredients');
-        cy.intercept('POST', '/api/orders', { statusCode: 200, body: { success: true, order: { number: 12345 } } }).as('createOrder');
-        cy.intercept('GET', '/api/auth/user', { fixture: 'user.json' }).as('getUser');
+/// <reference types="cypress" />
+
+describe('Интеграционные тесты конструктора бургера', () => {
+  beforeEach(() => {
+    cy.intercept('GET', '/api/ingredients', { fixture: 'ingredients.json' }).as(
+      'getIngredients'
+    );
+    cy.intercept('POST', '/api/auth/login', { fixture: 'user.json' }).as(
+      'loginUser'
+    );
+    cy.intercept('POST', '/api/orders', { fixture: 'order.json' }).as(
+      'createOrder'
+    );
+    cy.visit('/');
+    cy.wait('@getIngredients');
+  });
+
+  it('Добавление ингредиента в конструктор', () => {
+    cy.get('[data-testid="ingredient-643d69a5c3f7b9001cfa093d"]')
+      .find('button')
+      .click();
+    cy.get('[data-testid="constructor-area"]').should(
+      'contain',
+      'Флюоресцентная булка R2-D3'
+    );
+
+    cy.get('[data-testid="ingredient-643d69a5c3f7b9001cfa0941"]')
+      .find('button')
+      .click();
+    cy.get('[data-testid="constructor-area"]').should(
+      'contain',
+      'Биокотлета из марсианской Магнолии'
+    );
+  });
+
+  it('Работа модальных окон', () => {
+    cy.get('[data-testid="ingredient-643d69a5c3f7b9001cfa093d"]').click();
+    cy.get('[data-testid="modal"]').should('be.visible');
+
+    cy.get('[data-testid="modal-close"]').click();
+    cy.get('[data-testid="modal"]').should('not.exist');
+
+    cy.get('[data-testid="ingredient-643d69a5c3f7b9001cfa093d"]').click();
+    cy.get('[data-testid="modal"]').should('be.visible');
+    cy.get('[data-testid="modal-overlay"]').click();
+    cy.get('[data-testid="modal"]').should('not.exist');
+  });
+
+  it('Создание заказа', () => {
+    cy.request('POST', '/api/auth/login', {
+      email: 'test@example.com',
+      password: 'password'
     });
 
-    it('Добавление ингредиента из списка в конструктор', () => {
-        cy.wait('@getIngredients');
-        cy.get('[data-test="ingredient-bun"]').first().click(); 
-        cy.get('[data-test="add-to-constructor-button"]').first().click(); 
-        cy.get('[data-test="constructor-count"]').should('have.text', '1');
-    });
+    cy.get('[data-testid="ingredient-643d69a5c3f7b9001cfa093d"]')
+      .find('button')
+      .click();
+    cy.get('[data-testid="ingredient-643d69a5c3f7b9001cfa0941"]')
+      .find('button')
+      .click();
 
-    it('Открытие и закрытие модального окна с описанием ингредиента', () => {
-        cy.get('[data-test="ingredient-bun"]').first().click(); 
-        cy.get('[data-test="modal"]').should('be.visible'); 
-        cy.get('[data-test="modal-close"]').click(); 
-        cy.get('[data-test="modal"]').should('not.exist');
-    });
+    cy.get('[data-testid="order-button"]').click();
+    cy.wait('@createOrder');
 
-    it('Создание заказа', () => {
-        cy.wait('@getIngredients');
-        cy.get('[data-test="ingredient-bun"]').first().click(); 
-        cy.get('[data-test="add-to-constructor-button"]').first().click();
-        cy.get('[data-test="order-button"]').click();
-        cy.wait('@createOrder').its('response.statusCode').should('eq', 200); 
-        cy.get('[data-test="modal"]').should('be.visible'); 
-        cy.get('[data-test="order-number"]').should('have.text', '12345'); 
-        cy.get('[data-test="modal-close"]').click(); 
-        cy.get('[data-test="modal"]').should('not.exist'); 
-    });
+    cy.get('[data-testid="modal"]').should('be.visible');
+    cy.get('[data-testid="modal"]').should('contain', '70752');
+
+    cy.get('[data-testid="modal-close"]').click();
+    cy.get('[data-testid="modal"]').should('not.exist');
+
+    cy.get('[data-testid="constructor-area"]').should('be.empty');
+  });
 });
