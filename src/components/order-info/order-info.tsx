@@ -1,23 +1,26 @@
-import { FC, useMemo } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
-import { TIngredient } from '@utils-types';
+import { TIngredient, TOrder } from '@utils-types';
+import { useSelector } from '../../services/store';
+import { getIngredients } from '../../slice/IngredientSlice';
+import { useParams } from 'react-router-dom';
+import { getOrderByNumberApi } from '@api';
 
 export const OrderInfo: FC = () => {
-  /** TODO: взять переменные orderData и ingredients из стора */
-  const orderData = {
+  const [orderData, setOrderData] = useState<TOrder>({
     createdAt: '',
     ingredients: [],
     _id: '',
     status: '',
     name: '',
-    updatedAt: 'string',
+    updatedAt: '',
     number: 0
-  };
+  });
 
-  const ingredients: TIngredient[] = [];
+  const ingredients: TIngredient[] = useSelector(getIngredients);
+  const id = Number(useParams().number);
 
-  /* Готовим данные для отображения */
   const orderInfo = useMemo(() => {
     if (!orderData || !ingredients.length) return null;
 
@@ -29,16 +32,17 @@ export const OrderInfo: FC = () => {
 
     const ingredientsInfo = orderData.ingredients.reduce(
       (acc: TIngredientsWithCount, item) => {
+        const ingredient = ingredients.find((ing) => ing._id === item);
+        if (!ingredient) return acc;
+        const count = ingredient.type === 'bun' ? 2 : 1;
+
         if (!acc[item]) {
-          const ingredient = ingredients.find((ing) => ing._id === item);
-          if (ingredient) {
-            acc[item] = {
-              ...ingredient,
-              count: 1
-            };
-          }
+          acc[item] = {
+            ...ingredient,
+            count: count
+          };
         } else {
-          acc[item].count++;
+          acc[item].count += count;
         }
 
         return acc;
@@ -58,6 +62,12 @@ export const OrderInfo: FC = () => {
       total
     };
   }, [orderData, ingredients]);
+
+  useEffect(() => {
+    getOrderByNumberApi(Number(id)).then((data) => {
+      setOrderData(data.orders[0]);
+    });
+  }, [id]);
 
   if (!orderInfo) {
     return <Preloader />;
