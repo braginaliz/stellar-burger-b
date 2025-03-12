@@ -27,7 +27,7 @@ const ProtectedRoute = ({
   if (onlyUnAuth && isAuthChecked) {
     const prevPage = location.state?.from || { pathname: '/' };
     // Перенаправление на предыдущую страницу, если уже авторизован
-    return <Navigate  to={prevPage} />;
+    return <Navigate to={prevPage} />;
   }
   return <>{component}</>;
 };
