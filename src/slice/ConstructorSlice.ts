@@ -72,4 +72,3 @@ export const {
 
 export const constructorReducer = constructorSlice.reducer;
 export const constructorSelector = constructorSlice.selectors;
-
