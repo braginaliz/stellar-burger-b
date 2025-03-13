@@ -15,7 +15,7 @@ export const ModalUI: FC<TModalUIProps> = memo(
             {title}
           </h3>
           <button
-            data-cy='close-button'
+            data-cy='close'
             className={styles.button}
             type='button'
             aria-label='Закрыть модальное окно'

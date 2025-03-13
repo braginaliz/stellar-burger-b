@@ -2,7 +2,7 @@ describe('Тестирование функционала сборки бург�
   const selectors = {
     modalWindow: '[data-cy=modal]',
     ingredientCategory: '[data-cy=ingredients-category]',
-    closeButton: '[data-cy=close-button]',
+    closeButton: '[data-cy=close]',
     overlay: '[data-cy=overlay]',
   };
 
