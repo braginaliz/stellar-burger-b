@@ -1,17 +1,10 @@
 import { defineConfig } from 'cypress';
 
 export default defineConfig({
-  component: {
-    devServer: {
-      framework: 'react',
-      bundler: 'webpack'
-    }
-  },
-
   e2e: {
+    baseUrl: 'http://localhost:4000',
     setupNodeEvents(on, config) {
-
-    },
-    baseUrl: 'http://localhost:4000/',
+      // implement node event listeners here
+    }
   }
 });
