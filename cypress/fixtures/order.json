@@ -1,0 +1,21 @@
+{
+    "success": true,
+    "orders": [
+        {
+            "_id": "67d3451f133acd001be57aae",
+            "ingredients": [
+                "643d69a5c3f7b9001cfa093c",
+                "643d69a5c3f7b9001cfa093e",
+                "643d69a5c3f7b9001cfa0942"
+            ],
+            "owner": "67cf3c88133acd001be56e39",
+            "status": "done",
+            "name": "Краторный spicy люминесцентный бургер",
+            "createdAt": "2025-03-13T20:50:39.103Z",
+            "updatedAt": "2025-03-13T20:50:39.818Z",
+            "number": 70997,
+            "__v": 0
+        }
+    ]
+ }
+ 
